@@ -227,10 +227,10 @@ data "aws_iam_policy_document" "allow-state-access-from-root-account" {
   dynamic "statement" {
     for_each = local.environment_accounts
     content {
-      sid       = format("GetObjectFor%s", title(statement.key))
+      sid       = format("GetObjectFor%s", title(replace(statement.key, "-", "")))
       effect    = "Allow"
       actions   = ["s3:GetObject"]
-      resources = [format("%s/environments/members/%s", module.state-bucket.bucket.arn, statement.key)]
+      resources = [format("%s/environments/members/%s/*", module.state-bucket.bucket.arn, statement.key)]
 
       principals {
         type        = "AWS"
