@@ -6,7 +6,7 @@ locals {
   modernisation_platform_ou_id = local.environment_management.modernisation_platform_organisation_unit_id
   pagerduty_integration_keys   = jsondecode(data.aws_secretsmanager_secret_version.pagerduty_integration_keys.secret_string)
 
-  root_users_with_state_access = [ # also includes the organisations GHA Role
+  root_users_with_state_access = [ # also includes the organisational GHA Role
     "arn:aws:iam::${local.root_account.master_account_id}:user/ModernisationPlatformOrganisationManagement",
     "arn:aws:iam::${local.root_account.master_account_id}:user/DavidElliott",
     "arn:aws:iam::${local.root_account.master_account_id}:role/ModernisationPlatformGithubActionsRole" # Role with the same permissions as ModernisationPlatformOrganisationManagement for Github OIDC
