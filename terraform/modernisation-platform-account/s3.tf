@@ -224,6 +224,21 @@ data "aws_iam_policy_document" "allow-state-access-from-root-account" {
     }
   }
 
+  dynamic "statement" {
+    for_each = local.environment_accounts
+    content {
+      sid       = format("GetObjectFor%s", title(statement.key))
+      effect    = "Allow"
+      actions   = ["s3:GetObject"]
+      resources = [format("%s/environments/members/%s", module.state-bucket.bucket.arn, statement.key)]
+
+      principals {
+        type        = "AWS"
+        identifiers = [for account in statement.value : format("arn:aws:iam::%s:root", account)]
+      }
+    }
+  }
+
   statement {
     sid     = "AllowTestingCIUser"
     effect  = "Allow"
