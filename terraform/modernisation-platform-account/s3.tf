@@ -209,7 +209,6 @@ data "aws_iam_policy_document" "allow-state-access-from-root-account" {
     actions = ["s3:GetObject"]
     resources = [
       "${module.state-bucket.bucket.arn}/terraform.tfstate",
-      "${module.state-bucket.bucket.arn}/environments/members/*",
       "${module.state-bucket.bucket.arn}/environments/accounts/core-network-services/*"
     ]
 
@@ -234,7 +233,13 @@ data "aws_iam_policy_document" "allow-state-access-from-root-account" {
 
       principals {
         type        = "AWS"
-        identifiers = [for account in statement.value : format("arn:aws:iam::%s:root", account)]
+        identifiers = ["*"]
+      }
+
+      condition {
+        test     = "ForAnyValue:StringLike"
+        variable = "aws:SourceAccount"
+        values   = [for account in statement.value : account]
       }
     }
   }
