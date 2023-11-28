@@ -253,6 +253,7 @@ resource "helm_release" "openmetadata" {
     templatefile(
       "${path.module}/src/helm/openmetadata/values.yml.tftpl",
       {
+        cert_manager_cluster_issuer_name     = "letsencrypt-production"
         host                                 = "catalogue.${local.environment_configuration.route53_zone}"
         eks_role_arn                         = module.openmetadata_iam_role.iam_role_arn
         client_id                            = data.aws_secretsmanager_secret_version.openmetadata_entra_id_client_id.secret_string

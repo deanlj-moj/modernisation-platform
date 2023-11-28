@@ -81,6 +81,7 @@ ingress:
   enabled: true
   className: "default"
   annotations:
+    cert-manager.io/cluster-issuer: "${cert_manager_cluster_issuer}"
     external-dns.alpha.kubernetes.io/hostname: ${host}
   hosts:
     - host: ${host}
